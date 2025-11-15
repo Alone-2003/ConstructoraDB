@@ -1,0 +1,44 @@
+{% extends 'appiconstruction/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-trash me-2"></i>Eliminar Bodega</h1>
+    <a href="{% url 'lista_bodegas' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i>Volver a Bodegas
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="alert alert-danger">
+                    <h5><i class="fas fa-exclamation-triangle me-2"></i>¡Precaución!</h5>
+                    <p class="mb-0">Estás a punto de eliminar la bodega: <strong>{{ bodega.nombre }}</strong></p>
+                    <small class="text-warning">Esta acción no se puede deshacer.</small>
+                </div>
+                
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h6>Información de la Bodega:</h6>
+                        <p><strong>Nombre:</strong> {{ bodega.nombre }}</p>
+                        <p><strong>Ubicación:</strong> {{ bodega.ubicacion }}</p>
+                        <p><strong>Responsable:</strong> {{ bodega.responsable.get_full_name|default:bodega.responsable.username }}</p>
+                        <p><strong>Teléfono:</strong> {{ bodega.telefono|default:"No especificado" }}</p>
+                    </div>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-1"></i>Confirmar Eliminación
+                    </button>
+                    <a href="{% url 'lista_bodegas' %}" class="btn btn-secondary">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

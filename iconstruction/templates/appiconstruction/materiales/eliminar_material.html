@@ -1,0 +1,44 @@
+{% extends 'appiconstruction/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-trash me-2"></i>Eliminar Material</h1>
+    <a href="{% url 'lista_materiales' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i>Volver a Materiales
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="alert alert-danger">
+                    <h5><i class="fas fa-exclamation-triangle me-2"></i>¿Estás seguro?</h5>
+                    <p class="mb-0">Estás a punto de eliminar el material: <strong>{{ material.nombre }}</strong></p>
+                </div>
+                
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h6>Información del Material:</h6>
+                        <p><strong>Código:</strong> {{ material.codigo }}</p>
+                        <p><strong>Nombre:</strong> {{ material.nombre }}</p>
+                        <p><strong>Categoría:</strong> {{ material.categoria.nombre }}</p>
+                        <p><strong>Stock Actual:</strong> {{ material.stock_actual }}</p>
+                        <p><strong>Bodega:</strong> {{ material.bodega.nombre }}</p>
+                    </div>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-1"></i>Confirmar Eliminación
+                    </button>
+                    <a href="{% url 'lista_materiales' %}" class="btn btn-secondary">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

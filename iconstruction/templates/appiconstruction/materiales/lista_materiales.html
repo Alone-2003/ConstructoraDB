@@ -1,0 +1,105 @@
+{% extends 'appiconstruction/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-boxes me-2"></i>Gestión de Materiales</h1>
+    <a href="{% url 'agregar_material' %}" class="btn btn-primary">
+        <i class="fas fa-plus me-1"></i>Agregar Material
+    </a>
+</div>
+
+<!-- Búsqueda -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <form method="get">
+            <div class="input-group">
+                <input type="text" class="form-control" name="q" placeholder="Buscar materiales..." value="{{ request.GET.q }}">
+                <button class="btn btn-outline-secondary" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Tabla de Materiales -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Stock Actual</th>
+                        <th>Stock Mínimo</th>
+                        <th>Bodega</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for material in materiales %}
+                    <tr>
+                        <td>{{ material.codigo }}</td>
+                        <td>{{ material.nombre }}</td>
+                        <td>{{ material.categoria.nombre }}</td>
+                        <td>{{ material.stock_actual }} {{ material.unidad_medida }}</td>
+                        <td>{{ material.stock_minimo }} {{ material.unidad_medida }}</td>
+                        <td>{{ material.bodega.nombre }}</td>
+                        <td>
+                            {% if material.estado_stock == 'agotado' %}
+                                <span class="badge bg-danger badge-estado">Agotado</span>
+                            {% elif material.estado_stock == 'bajo' %}
+                                <span class="badge bg-warning badge-estado">Bajo Stock</span>
+                            {% else %}
+                                <span class="badge bg-success badge-estado">Normal</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'editar_material' material.pk %}" class="btn btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'eliminar_material' material.pk %}" class="btn btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center py-4">
+                            <i class="fas fa-box-open fa-2x text-muted mb-2"></i>
+                            <p class="text-muted">No se encontraron materiales</p>
+                            <a href="{% url 'agregar_material' %}" class="btn btn-primary">Agregar Primer Material</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<td>
+    <div class="btn-group btn-group-sm">
+        {% if material.id %}
+            <a href="{% url 'editar_material' material.pk %}" class="btn btn-warning" title="Editar">
+                <i class="fas fa-edit"></i>
+            </a>
+            <a href="{% url 'eliminar_material' material.pk %}" class="btn btn-danger" title="Eliminar">
+                <i class="fas fa-trash"></i>
+            </a>
+        {% else %}
+            <button class="btn btn-warning" disabled title="No se puede editar">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-danger" disabled title="No se puede eliminar">
+                <i class="fas fa-trash"></i>
+            </button>
+            <small class="text-danger">Datos corruptos</small>
+        {% endif %}
+    </div>
+</td>
+{% endblock %}

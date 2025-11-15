@@ -1,0 +1,152 @@
+{% extends 'appiconstruction/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h1>
+</div>
+
+<!-- Estadísticas -->
+<div class="row">
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <i class="fas fa-project-diagram fa-2x text-primary mb-3"></i>
+                <h3 class="stat-number">{{ total_proyectos }}</h3>
+                <p class="card-text">Total Proyectos</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <i class="fas fa-play-circle fa-2x text-success mb-3"></i>
+                <h3 class="stat-number">{{ proyectos_activos }}</h3>
+                <p class="card-text">Proyectos Activos</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <i class="fas fa-exclamation-triangle fa-2x text-warning mb-3"></i>
+                <h3 class="stat-number">{{ materiales_bajo_stock }}</h3>
+                <p class="card-text">Materiales Bajo Stock</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <i class="fas fa-tools fa-2x text-info mb-3"></i>
+                <h3 class="stat-number">{{ herramientas_prestadas }}</h3>
+                <p class="card-text">Herramientas Prestadas</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Materiales Recientes -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-boxes me-2"></i>Materiales Recientes
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Stock</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for material in materiales %}
+                            <tr>
+                                <td>{{ material.codigo }}</td>
+                                <td>{{ material.nombre }}</td>
+                                <td>{{ material.stock_actual }}</td>
+                                <td>
+                                    {% if material.estado_stock == 'agotado' %}
+                                        <span class="badge bg-danger badge-estado">Agotado</span>
+                                    {% elif material.estado_stock == 'bajo' %}
+                                        <span class="badge bg-warning badge-estado">Bajo</span>
+                                    {% else %}
+                                        <span class="badge bg-success badge-estado">Normal</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">No hay materiales registrados</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <a href="{% url 'lista_materiales' %}" class="btn btn-primary btn-sm">Ver Todos los Materiales</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Proyectos Recientes -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-project-diagram me-2"></i>Proyectos Recientes
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Estado</th>
+                                <th>Progreso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for proyecto in proyectos %}
+                            <tr>
+                                <td>{{ proyecto.codigo }}</td>
+                                <td>{{ proyecto.nombre }}</td>
+                                <td>
+                                    {% if proyecto.estado == 'en_curso' %}
+                                        <span class="badge bg-success badge-estado">En Curso</span>
+                                    {% elif proyecto.estado == 'planificacion' %}
+                                        <span class="badge bg-info badge-estado">Planificación</span>
+                                    {% elif proyecto.estado == 'suspendido' %}
+                                        <span class="badge bg-warning badge-estado">Suspendido</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary badge-estado">Completado</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar" role="progressbar" style="width: 25%;"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">No hay proyectos registrados</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <a href="{% url 'lista_proyectos' %}" class="btn btn-primary btn-sm">Ver Todos los Proyectos</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

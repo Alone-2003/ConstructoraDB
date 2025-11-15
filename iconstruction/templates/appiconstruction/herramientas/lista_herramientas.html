@@ -1,0 +1,90 @@
+{% extends 'appiconstruction/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-tools me-2"></i>Gestión de Herramientas</h1>
+    <a href="{% url 'agregar_herramienta' %}" class="btn btn-primary">
+        <i class="fas fa-plus me-1"></i>Agregar Herramienta
+    </a>
+</div>
+
+<!-- Tabla de Herramientas -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Estado</th>
+                        <th>Bodega</th>
+                        <th>Fecha Adquisición</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for herramienta in herramientas %}
+                    <tr>
+                        <td>{{ herramienta.codigo }}</td>
+                        <td>{{ herramienta.nombre }}</td>
+                        <td>{{ herramienta.categoria.nombre }}</td>
+                        <td>
+                            {% if herramienta.estado == 'disponible' %}
+                                <span class="badge bg-success badge-estado">Disponible</span>
+                            {% elif herramienta.estado == 'prestada' %}
+                                <span class="badge bg-warning badge-estado">Prestada</span>
+                            {% elif herramienta.estado == 'mantencion' %}
+                                <span class="badge bg-info badge-estado">Mantención</span>
+                            {% else %}
+                                <span class="badge bg-danger badge-estado">Dañada</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ herramienta.bodega.nombre }}</td>
+                        <td>{{ herramienta.fecha_adquisicion }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'editar_herramienta' herramienta.pk %}" class="btn btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'eliminar_herramienta' herramienta.pk %}" class="btn btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4">
+                            <i class="fas fa-tools fa-2x text-muted mb-2"></i>
+                            <p class="text-muted">No se encontraron herramientas</p>
+                            <a href="{% url 'agregar_herramienta' %}" class="btn btn-primary">Agregar Primera Herramienta</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<td>
+    <div class="btn-group btn-group-sm">
+        {% if herramienta.id %}
+            <a href="{% url 'editar_herramienta' herramienta.pk %}" class="btn btn-warning" title="Editar">
+                <i class="fas fa-edit"></i>
+            </a>
+            <a href="{% url 'eliminar_herramienta' herramienta.pk %}" class="btn btn-danger" title="Eliminar">
+                <i class="fas fa-trash"></i>
+            </a>
+        {% else %}
+            <button class="btn btn-warning" disabled title="No se puede editar">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-danger" disabled title="No se puede eliminar">
+                <i class="fas fa-trash"></i>
+            </button>
+        {% endif %}
+    </div>
+</td>
+{% endblock %}

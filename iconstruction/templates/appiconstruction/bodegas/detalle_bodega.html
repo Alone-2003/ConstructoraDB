@@ -1,0 +1,215 @@
+{% extends 'appiconstruction/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-warehouse me-2"></i>Detalle de Bodega: {{ bodega.nombre }}</h1>
+    <div>
+        <a href="{% url 'editar_bodega' bodega.pk %}" class="btn btn-warning">
+            <i class="fas fa-edit me-1"></i>Editar Bodega
+        </a>
+        <a href="{% url 'lista_bodegas' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Volver a Bodegas
+        </a>
+    </div>
+</div>
+
+<!-- Información de la Bodega -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0"><i class="fas fa-info-circle me-2"></i>Información General</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <th width="30%">Nombre:</th>
+                        <td>{{ bodega.nombre }}</td>
+                    </tr>
+                    <tr>
+                        <th>Ubicación:</th>
+                        <td>{{ bodega.ubicacion }}</td>
+                    </tr>
+                    <tr>
+                        <th>Responsable:</th>
+                        <td>{{ bodega.responsable.get_full_name|default:bodega.responsable.username }}</td>
+                    </tr>
+                    <tr>
+                        <th>Teléfono:</th>
+                        <td>{{ bodega.telefono|default:"No especificado" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Estado:</th>
+                        <td>
+                            {% if bodega.activa %}
+                                <span class="badge bg-success">Activa</span>
+                            {% else %}
+                                <span class="badge bg-danger">Inactiva</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0"><i class="fas fa-chart-bar me-2"></i>Estadísticas</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="stat-card">
+                            <h3 class="stat-number text-primary">{{ materiales.count }}</h3>
+                            <p class="text-muted mb-0">Materiales</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stat-card">
+                            <h3 class="stat-number text-success">{{ herramientas.count }}</h3>
+                            <p class="text-muted mb-0">Herramientas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Materiales en esta Bodega -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0"><i class="fas fa-boxes me-2"></i>Materiales Almacenados</h5>
+                <span class="badge bg-primary">{{ materiales.count }}</span>
+            </div>
+            <div class="card-body">
+                {% if materiales %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Stock</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for material in materiales %}
+                            <tr>
+                                <td>{{ material.codigo }}</td>
+                                <td>{{ material.nombre }}</td>
+                                <td>{{ material.stock_actual }}</td>
+                                <td>
+                                    {% if material.estado_stock == 'agotado' %}
+                                        <span class="badge bg-danger badge-estado">Agotado</span>
+                                    {% elif material.estado_stock == 'bajo' %}
+                                        <span class="badge bg-warning badge-estado">Bajo</span>
+                                    {% else %}
+                                        <span class="badge bg-success badge-estado">Normal</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-3">
+                    <i class="fas fa-box-open fa-2x text-muted mb-2"></i>
+                    <p class="text-muted mb-0">No hay materiales en esta bodega</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Herramientas en esta Bodega -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0"><i class="fas fa-tools me-2"></i>Herramientas Asignadas</h5>
+                <span class="badge bg-primary">{{ herramientas.count }}</span>
+            </div>
+            <div class="card-body">
+                {% if herramientas %}
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for herramienta in herramientas %}
+                            <tr>
+                                <td>{{ herramienta.codigo }}</td>
+                                <td>{{ herramienta.nombre }}</td>
+                                <td>
+                                    {% if herramienta.estado == 'disponible' %}
+                                        <span class="badge bg-success badge-estado">Disponible</span>
+                                    {% elif herramienta.estado == 'prestada' %}
+                                        <span class="badge bg-warning badge-estado">Prestada</span>
+                                    {% elif herramienta.estado == 'mantencion' %}
+                                        <span class="badge bg-info badge-estado">Mantención</span>
+                                    {% else %}
+                                        <span class="badge bg-danger badge-estado">Dañada</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-3">
+                    <i class="fas fa-tools fa-2x text-muted mb-2"></i>
+                    <p class="text-muted mb-0">No hay herramientas en esta bodega</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Acciones Rápidas -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0"><i class="fas fa-bolt me-2"></i>Acciones Rápidas</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'agregar_material' %}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-plus me-1"></i>Agregar Material
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'agregar_herramienta' %}" class="btn btn-outline-success w-100">
+                            <i class="fas fa-plus me-1"></i>Agregar Herramienta
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'editar_bodega' bodega.pk %}" class="btn btn-outline-warning w-100">
+                            <i class="fas fa-edit me-1"></i>Editar Bodega
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'lista_bodegas' %}" class="btn btn-outline-secondary w-100">
+                            <i class="fas fa-list me-1"></i>Ver Todas
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

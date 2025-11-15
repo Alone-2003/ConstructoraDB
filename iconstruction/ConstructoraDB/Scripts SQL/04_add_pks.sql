@@ -1,0 +1,16 @@
+ALTER TABLE roles                  ADD CONSTRAINT pk_roles PRIMARY KEY (id);
+ALTER TABLE usuarios               ADD CONSTRAINT pk_usuarios PRIMARY KEY (id);
+ALTER TABLE proyectos              ADD CONSTRAINT pk_proyectos PRIMARY KEY (id);
+ALTER TABLE actividades            ADD CONSTRAINT pk_actividades PRIMARY KEY (id);
+ALTER TABLE avances                ADD CONSTRAINT pk_avances PRIMARY KEY (id);
+ALTER TABLE materiales             ADD CONSTRAINT pk_materiales PRIMARY KEY (id);
+ALTER TABLE herramientas           ADD CONSTRAINT pk_herramientas PRIMARY KEY (id);
+ALTER TABLE ingresos               ADD CONSTRAINT pk_ingresos PRIMARY KEY (id);
+ALTER TABLE ingreso_material       ADD CONSTRAINT pk_ingreso_material PRIMARY KEY (id);
+ALTER TABLE entregas               ADD CONSTRAINT pk_entregas PRIMARY KEY (id);
+ALTER TABLE entrega_material       ADD CONSTRAINT pk_entrega_material PRIMARY KEY (id);
+ALTER TABLE prestamo_herramienta   ADD CONSTRAINT pk_prestamo_herramienta PRIMARY KEY (id);
+ALTER TABLE devolucion_herramienta ADD CONSTRAINT pk_devolucion_herramienta PRIMARY KEY (id);
+ALTER TABLE devolucion_material    ADD CONSTRAINT pk_devolucion_material PRIMARY KEY (id);
+ALTER TABLE ajustes_stock          ADD CONSTRAINT pk_ajustes_stock PRIMARY KEY (id);
+ALTER TABLE auditoria              ADD CONSTRAINT pk_auditoria PRIMARY KEY (id);

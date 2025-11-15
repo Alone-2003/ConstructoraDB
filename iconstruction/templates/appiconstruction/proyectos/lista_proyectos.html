@@ -1,0 +1,96 @@
+{% extends 'appiconstruction/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-project-diagram me-2"></i>Gestión de Proyectos</h1>
+    <a href="{% url 'agregar_proyecto' %}" class="btn btn-primary">
+        <i class="fas fa-plus me-1"></i>Agregar Proyecto
+    </a>
+</div>
+
+<!-- Tabla de Proyectos -->
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Término</th>
+                        <th>Estado</th>
+                        <th>Supervisor</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for proyecto in proyectos %}
+                    <tr>
+                        <td>{{ proyecto.codigo }}</td>
+                        <td>{{ proyecto.nombre }}</td>
+                        <td>{{ proyecto.fecha_inicio }}</td>
+                        <td>{{ proyecto.fecha_termino_planificada }}</td>
+                        <td>
+                            {% if proyecto.estado == 'en_curso' %}
+                                <span class="badge bg-success badge-estado">En Curso</span>
+                            {% elif proyecto.estado == 'planificacion' %}
+                                <span class="badge bg-info badge-estado">Planificación</span>
+                            {% elif proyecto.estado == 'suspendido' %}
+                                <span class="badge bg-warning badge-estado">Suspendido</span>
+                            {% else %}
+                                <span class="badge bg-secondary badge-estado">Completado</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ proyecto.supervisor.get_full_name|default:proyecto.supervisor.username }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-info">
+                                    <i class="fas fa-chart-line"></i>
+                                </button>
+                                <button class="btn btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4">
+                            <i class="fas fa-project-diagram fa-2x text-muted mb-2"></i>
+                            <p class="text-muted">No se encontraron proyectos</p>
+                            <a href="{% url 'agregar_proyecto' %}" class="btn btn-primary">Agregar Primer Proyecto</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<td>
+    <div class="btn-group btn-group-sm">
+        {% if proyecto.id %}
+            <button class="btn btn-info" title="Ver Reporte">
+                <i class="fas fa-chart-line"></i>
+            </button>
+            <a href="#" class="btn btn-warning" title="Editar">
+                <i class="fas fa-edit"></i>
+            </a>
+            <a href="{% url 'eliminar_proyecto' proyecto.pk %}" class="btn btn-danger" title="Eliminar">
+                <i class="fas fa-trash"></i>
+            </a>
+        {% else %}
+            <button class="btn btn-info" disabled title="No disponible">
+                <i class="fas fa-chart-line"></i>
+            </button>
+            <button class="btn btn-warning" disabled title="No se puede editar">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-danger" disabled title="No se puede eliminar">
+                <i class="fas fa-trash"></i>
+            </button>
+        {% endif %}
+    </div>
+</td>
+{% endblock %}

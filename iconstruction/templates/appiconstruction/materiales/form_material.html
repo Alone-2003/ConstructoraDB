@@ -1,0 +1,86 @@
+{% extends 'appiconstruction/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-boxes me-2"></i>{{ titulo }}</h1>
+    <a href="{% url 'lista_materiales' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i>Volver a Materiales
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Información del Material</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form.codigo|as_crispy_field }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.nombre|as_crispy_field }}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form.categoria|as_crispy_field }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.unidad_medida|as_crispy_field }}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form.stock_minimo|as_crispy_field }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.stock_actual|as_crispy_field }}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form.bodega|as_crispy_field }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.fecha_vencimiento|as_crispy_field }}
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>Guardar Material
+                        </button>
+                        <a href="{% url 'lista_materiales' %}" class="btn btn-secondary">
+                            <i class="fas fa-times me-1"></i>Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0"><i class="fas fa-info-circle me-2"></i>Información</h6>
+            </div>
+            <div class="card-body">
+                <small class="text-muted">
+                    <p><strong>Código:</strong> Debe ser único para cada material.</p>
+                    <p><strong>Stock Mínimo:</strong> Nivel que activa alertas de reposición.</p>
+                    <p><strong>Fecha Vencimiento:</strong> Opcional para materiales perecederos.</p>
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
